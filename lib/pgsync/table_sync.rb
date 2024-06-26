@@ -2,14 +2,15 @@ module PgSync
   class TableSync
     include Utils
 
-    attr_reader :source, :destination, :tasks, :opts, :resolver
+    attr_reader :source, :destination, :tasks, :opts, :resolver, :config
 
-    def initialize(source:, destination:, tasks:, opts:, resolver:)
+    def initialize(source:, destination:, tasks:, opts:, resolver:, config:)
       @source = source
       @destination = destination
       @tasks = tasks
       @opts = opts
       @resolver = resolver
+      @config = config
     end
 
     def perform
@@ -33,10 +34,17 @@ module PgSync
       destination_columns = columns(destination)
 
       tasks.each do |task|
-        task.from_columns = source_columns[task.table] || []
-        task.to_columns = destination_columns[task.table] || []
+        columns = config.dig('table_options', task.table.to_s, 'columns')
+
+        if columns          
+          task.from_columns = source_columns[task.table].select { |item| columns.include?(item[:name]) }
+          task.to_columns = destination_columns[task.table].select { |item| columns.include?(item[:name]) }
+        else
+          task.from_columns = source_columns[task.table]
+          task.to_columns = destination_columns[task.table]
+        end
       end
-    end
+    end    
 
     def add_primary_keys
       destination_primary_keys = primary_keys(destination)

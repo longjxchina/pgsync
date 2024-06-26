@@ -64,7 +64,7 @@ module PgSync
         end
 
         unless opts[:schema_only]
-          TableSync.new(source: source, destination: destination, tasks: tasks, opts: opts, resolver: resolver).perform
+          TableSync.new(source: source, destination: destination, tasks: tasks, opts: opts, resolver: resolver, config: config).perform
         end
 
         log_completed(started_at)

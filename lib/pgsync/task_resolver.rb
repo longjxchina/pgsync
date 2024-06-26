@@ -188,17 +188,6 @@ module PgSync
       resolved_table
     end
 
-    # parse command line arguments and YAML
-    def to_arr(value)
-      if value.is_a?(Array)
-        value
-      else
-        # Split by commas, but don't use commas inside double quotes
-        # https://stackoverflow.com/questions/21105360/regex-find-comma-not-inside-quotes
-        value.to_s.split(/(?!\B"[^"]*),(?![^"]*"\B)/)
-      end
-    end
-
     def sql_arg
       args[1]
     end

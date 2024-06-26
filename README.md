@@ -220,6 +220,19 @@ To manually specify the order of tables, use `--jobs 1` so tables are synced one
 pgsync table1,table2,table3 --jobs 1
 ```
 
+add table columns config
+
+```sh
+pgsync table1,table2 --overwrite
+```
+
+```yml
+# 示例
+table_options:
+  public.table1:
+    columns: [Id, Name]
+```
+
 To disable foreign key triggers and potentially break referential integrity, use:
 
 ```sh
@@ -402,6 +415,8 @@ To use master, run:
 
 ```sh
 gem install specific_install
+# if reinstall, uninstall and clean cache first
+gem uninstall pgsync -x && gem clean
 gem specific_install https://github.com/ankane/pgsync.git
 ```
 
